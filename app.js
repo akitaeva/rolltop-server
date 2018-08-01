@@ -13,7 +13,7 @@ const cors 		   = require('cors');
 
 mongoose.Promise = Promise;
 mongoose
-  .connect('mongodb://localhost/rolltop', {useMongoClient: true})
+  .connect('mongodb://localhost/testspace', {useMongoClient: true})
   .then(() => {
     console.log('Connected to Mongo!')
   }).catch(err => {

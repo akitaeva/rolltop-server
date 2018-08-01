@@ -13,10 +13,21 @@ router.get('/notes/getNotes', (req, res, next) => {
 
 // Post New Note (JM) (DONE)
 router.post('/notes/postNote', (req, res, next) => {
-  const newNote = new Note({
+  /*const newNote = new Note({
     title: req.body.title,
     content: req.body.content
-  });
+  });*/
+
+  Note.create({
+    title: req.body.title,
+    content: req.body.content
+    })
+    .then((response)=>{
+        res.json(response)
+    })
+    .catch((err)=>{
+        res.json(err);
+    })
 });
 
 // Get Specific Notes (JM) (DONE)
