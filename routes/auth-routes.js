@@ -22,10 +22,10 @@ authRoutes.post('/signup', (req, res, next) => {
     return;
   }
 
-//   if( password !== req.body.checkedPassword){
-//     res.status(400).json({ message: 'Passwords do not match!' });
-//     return;
-//   } else {  
+  if( password !== req.body.checkedPassword){
+    res.status(400).json({ message: 'Passwords do not match!' });
+    return;
+  } else {  
         //making sure the email is unique in DB
         User.findOne({ email }, '_id', (err, foundEmail) => {
                 if (foundEmail) {
@@ -59,7 +59,7 @@ authRoutes.post('/signup', (req, res, next) => {
             });
         });
 
-    // }
+    }
 });
 
 authRoutes.post('/login', (req, res, next) => {
@@ -115,23 +115,30 @@ authRoutes.get('/:userId/edit', (req, res, next)=>{
 
 //saving the edited user's profile
 authRoutes.post('/:userId/update', (req, res, next)=>{
-    const password = req.body.password;
-    const salt     = bcrypt.genSaltSync(10);
-    const hashPass = bcrypt.hashSync(password, salt);
-    const updUser = {
-        username:    req.body.username,
-        password:    hashPass,
-        email:       req.body.email,
-        features:    req.body.features
-    };
+    //comparing new password entry from 2 fields    
+    if (req.body.password !== req.body.checkedPassword) {
+        res.status(400).json({ message: 'Passwords do not match!' }); 
+        return;
+    } else { 
+        
+        const password = req.body.password;
+        const salt     = bcrypt.genSaltSync(10);
+        const hashPass = bcrypt.hashSync(password, salt);
+        const updUser  = {
+            username:    req.body.username,
+            password:    hashPass,
+            email:       req.body.email,
+            features:    req.body.features
+        };
 
-    User.findByIdAndUpdate(req.params.userId, updUser)
-    .then((user)=>{
-        res.status(200).json(user)
-    })
-    .catch((err)=>{
-        next(err);
-    })  
+        User.findByIdAndUpdate(req.params.userId, updUser)
+        .then((user)=>{
+                res.status(200).json(user)
+        })
+        .catch((err)=>{
+            next(err);
+        })  
+  } 
 });
 
 //deleting the user's profile
@@ -139,7 +146,8 @@ authRoutes.post('/:userId/delete', (req, res, next)=>{
   const id = req.params.userId;
     User.findByIdAndRemove(id)
     .then(() =>{
-        res.status(200).json()
+        res.status(200).json({ message: 'The user account has been deleted' })
+        
     })
     .catch((err) => {
         next(err); 

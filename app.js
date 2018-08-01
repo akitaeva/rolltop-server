@@ -59,15 +59,16 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // default value for title local
-app.locals.title = 'Express - Generated with IronGenerator';
+app.locals.title = 'Rolltop - Your All Access Online Desk';
 
 
 const index = require('./routes/index');
 app.use('/', index);
 
+const placeRoutes = require('./routes/place-routes');
+app.use('/api', placeRoutes);
+
 const authRoutes = require('./routes/auth-routes');
 app.use('/api', authRoutes);
-
-
 
 module.exports = app;
