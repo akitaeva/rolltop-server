@@ -10,6 +10,9 @@ const logger       = require('morgan');
 const path         = require('path');
 const cors 		   = require('cors');
 
+//File Upload 
+var upload = require('express-fileupload');
+
 
 mongoose.Promise = Promise;
 mongoose
@@ -31,6 +34,9 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+//File Upload
+app.use(upload());
 
 // Express View engine setup
 
@@ -58,6 +64,9 @@ app.use('/', index);
 
 const nRoutes = require('./routes/api/noteRoutes');
 app.use('/api', nRoutes);
+
+const uRoutes = require('./routes/api/PasteRoutes');
+app.use('/paste', uRoutes);
 
 app.all('/*', function (req, res) {
   res.sendfile(__dirname + '/public/index.html');
