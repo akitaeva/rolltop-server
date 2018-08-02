@@ -9,18 +9,27 @@ const mongoose     = require('mongoose');
 const logger       = require('morgan');
 const path         = require('path');
 <<<<<<< HEAD
+<<<<<<< HEAD
 const cors 		   = require('cors');
 
 //File Upload 
 var upload = require('express-fileupload');
 =======
+=======
+
+//File Upload 
+var upload = require('express-fileupload');
+>>>>>>> 324ede0f19f7940fa221db225961fb66d3333289
 const session      = require('express-session');
 const passport     = require('passport');
 const cors         = require('cors');
 
 const passportSetup = require('./config/passport');
 passportSetup(passport);
+<<<<<<< HEAD
 >>>>>>> e284be75e42dc77d298f8fdedec3ab126ca8cc3d
+=======
+>>>>>>> 324ede0f19f7940fa221db225961fb66d3333289
 
 
 mongoose.Promise = Promise;
@@ -77,6 +86,10 @@ const index = require('./routes/index');
 app.use('/', index);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> 324ede0f19f7940fa221db225961fb66d3333289
 const nRoutes = require('./routes/api/noteRoutes');
 app.use('/api', nRoutes);
 
@@ -87,7 +100,11 @@ app.all('/*', function (req, res) {
   res.sendfile(__dirname + '/public/index.html');
 });
 
+<<<<<<< HEAD
 =======
+=======
+
+>>>>>>> 324ede0f19f7940fa221db225961fb66d3333289
 const placeRoutes = require('./routes/place-routes');
 app.use('/api', placeRoutes);
 
@@ -96,6 +113,15 @@ app.use('/api', projectRoutes);
 
 const authRoutes = require('./routes/auth-routes');
 app.use('/api', authRoutes);
+<<<<<<< HEAD
 >>>>>>> e284be75e42dc77d298f8fdedec3ab126ca8cc3d
+=======
+
+app.all('/*', function (req, res) {
+  res.sendfile(__dirname + '/public/index.html');
+});
+
+
+>>>>>>> 324ede0f19f7940fa221db225961fb66d3333289
 
 module.exports = app;
