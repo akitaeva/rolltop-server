@@ -7,17 +7,24 @@
     "dev": "DEBUG=rolltop:* nodemon ./bin/www"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.4",
     "dotenv": "~4.0.0",
     "express": "~4.16.0",
+<<<<<<< HEAD
     "express-fileupload": "^0.4.0",
     "fs": "0.0.1-security",
+=======
+    "express-session": "^1.15.6",
+>>>>>>> e284be75e42dc77d298f8fdedec3ab126ca8cc3d
     "hbs": "~4.0.1",
     "mongoose": "~4.13.4",
     "morgan": "~1.9.0",
     "node-sass-middleware": "0.11.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
     "serve-favicon": "~2.4.5"
   },
   "devDependencies": {
