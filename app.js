@@ -68,6 +68,9 @@ app.use('/', index);
 const placeRoutes = require('./routes/place-routes');
 app.use('/api', placeRoutes);
 
+const projectRoutes = require('./routes/project-routes');
+app.use('/api', projectRoutes);
+
 const authRoutes = require('./routes/auth-routes');
 app.use('/api', authRoutes);
 

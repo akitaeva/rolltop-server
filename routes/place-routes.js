@@ -3,7 +3,7 @@ const placeRoutes = express.Router();
 const Place = require("../models/favPlace");
 
 placeRoutes.get('/places', (req, res, next) => {
-    Task.find({}, (err, tasks) => {
+    Place.find({}, (err, tasks) => {
       if (err) { return res.json(err).status(500); }
   
       return res.json(tasks);
@@ -66,12 +66,12 @@ placeRoutes.post('/places/:placeId/delete', (req, res, next)=>{
 }); 
 
 placeRoutes.get('/places/:placeId', (req, res, next) => {
-    const id = req.params.taskId;
-    Task.findById(req.params.id, (err, task) => {
+    const id = req.params.placeId;
+    Place.findById(req.params.id, (err, place) => {
       if (err)    { return res.json(err).status(500); }
       if (!entry) { return res.json(err).status(404); }
   
-      return res.json(task);
+      return res.json(place);
     });
 });
    
