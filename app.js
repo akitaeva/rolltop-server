@@ -8,29 +8,18 @@ const hbs          = require('hbs');
 const mongoose     = require('mongoose');
 const logger       = require('morgan');
 const path         = require('path');
-<<<<<<< HEAD
-<<<<<<< HEAD
 const cors 		   = require('cors');
 
 //File Upload 
 var upload = require('express-fileupload');
-=======
-=======
 
 //File Upload 
 var upload = require('express-fileupload');
->>>>>>> 324ede0f19f7940fa221db225961fb66d3333289
 const session      = require('express-session');
 const passport     = require('passport');
-const cors         = require('cors');
 
 const passportSetup = require('./config/passport');
 passportSetup(passport);
-<<<<<<< HEAD
->>>>>>> e284be75e42dc77d298f8fdedec3ab126ca8cc3d
-=======
->>>>>>> 324ede0f19f7940fa221db225961fb66d3333289
-
 
 mongoose.Promise = Promise;
 mongoose
@@ -81,47 +70,34 @@ app.use(passport.session());
 // default value for title local
 app.locals.title = 'Rolltop - Your All Access Online Desk';
 
-
+// Index Route
 const index = require('./routes/index');
 app.use('/', index);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> 324ede0f19f7940fa221db225961fb66d3333289
+//Note Routes (JM) (Tested: NO)
 const nRoutes = require('./routes/api/noteRoutes');
 app.use('/api', nRoutes);
 
+//Pastebin Routes (JM) (Tested: NO)
 const uRoutes = require('./routes/api/PasteRoutes');
 app.use('/paste', uRoutes);
 
-app.all('/*', function (req, res) {
-  res.sendfile(__dirname + '/public/index.html');
-});
-
-<<<<<<< HEAD
-=======
-=======
-
->>>>>>> 324ede0f19f7940fa221db225961fb66d3333289
-const placeRoutes = require('./routes/place-routes');
+//Place Routes (A)  (Tested: NO)
+const placeRoutes = require('./routes/api/place-routes');
 app.use('/api', placeRoutes);
 
-const projectRoutes = require('./routes/project-routes');
+//Project Routes (A)  (Tested: NO)
+const projectRoutes = require('./routes/api/project-routes');
 app.use('/api', projectRoutes);
 
-const authRoutes = require('./routes/auth-routes');
+//Auth Routes (A)  (Tested: NO)
+const authRoutes = require('./routes/api/auth-routes');
 app.use('/api', authRoutes);
-<<<<<<< HEAD
->>>>>>> e284be75e42dc77d298f8fdedec3ab126ca8cc3d
-=======
 
+//Default 
 app.all('/*', function (req, res) {
   res.sendfile(__dirname + '/public/index.html');
 });
 
-
->>>>>>> 324ede0f19f7940fa221db225961fb66d3333289
 
 module.exports = app;

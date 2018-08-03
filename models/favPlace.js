@@ -7,6 +7,7 @@ const placeSchema = new Schema({
   phoneNumber: {type: String, required: true},
   address:     {type: String, required: true},
   notes:       {type: String},
+  owner:       {type: Schema.Types.ObjectId, ref: 'User'}
 }, {
   timestamps: true
 });
