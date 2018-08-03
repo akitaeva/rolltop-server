@@ -1,6 +1,6 @@
 const express = require("express");
 const placeRoutes = express.Router();
-const Place = require("../models/favPlace");
+const Place = require("../../models/favPlace");
 
 placeRoutes.get('/places', (req, res, next) => {
     Place.find({}, (err, tasks) => {
@@ -30,14 +30,14 @@ placeRoutes.post('/places', (req, res, next) => {
       });
 });
 
-
-placeRoutes.get('/places/:placeId/edit', (req, res, next) => {
+// Edit not needed, can use /places/:placeId
+/*placeRoutes.get('/places/:placeId/edit', (req, res, next) => {
     Place.findById(req.params.placeId)
     .then((place)=>{
         res.status(200).json(place)
     })
     .catch(err=>next(err));
-   });
+   });*/
    
    
 //saving the updated task

@@ -1,7 +1,7 @@
 const express = require("express");
 const projectRoutes = express.Router();
-const Project = require("../models/project");
-const Task = require('../models/task');
+const Project = require("../../models/project");
+const Task = require('../../models/task');
 
 projectRoutes.get('/projects', (req, res, next) => {
     Project.find({}, (err, tasks) => {
@@ -53,15 +53,40 @@ projectRoutes.post('/projects/:id/add-task', (req, res, next) => {
 })
 
 
-projectRoutes.get('/projects/:projectId/edit', (req, res, next) => {
+// projectRoutes.get('/projects/:projectId/edit', (req, res, next) => {
+//     const id = req.params.taskId;
+//     Project.findById(req.params.id, (err, project) => {
+//       if (err)    {return res.json(err).status(500); }
+//       if (!entry) {return res.json(err).status(404); }
+  
+//       return res.json(project);
+//     });
+// });
+ 
 
-   });
-   
-   
-//saving the updated task
+// Update Full Project by ID (JM) (DONE) (Notes: Might have to add explicit update functions for things like "closed")
 projectRoutes.post('/projects/:projectId/update',(req, res, next) => {
+    
+    const pId =          req.params.projectId;
+    const title  =       req.body.title;
+    const description =  req.body.description;
+    const closed =       req.body.title;
+ 
+    Project.findById(pId)
+        .then((project) =>{
+            project.title = title;
+            project.description = description;
+            project.closed = closed;
 
-   });       
+            project.save()
+                .then((response)=>{
+                    res.json(response);
+                })
+        })
+    .catch((err)=>{
+        res.json(err);
+    })  
+});       
 
 projectRoutes.post('/projects/:projectId/delete', (req, res, next)=>{
     const id = req.params.placeId;

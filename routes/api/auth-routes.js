@@ -1,10 +1,12 @@
 const express    = require('express');
 const passport   = require('passport');
 const bcrypt     = require('bcryptjs');
+const fs            = require('fs'); // (JM): Added Filesystem to add folder when signing up
 
 const authRoutes = express.Router(); 
-const User       = require('../models/user');// the user model
+const User       = require('../../models/user');// the user model
 
+// Login Route (A) (JM TEST: WORKS)
 authRoutes.post('/signup', (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
@@ -16,7 +18,7 @@ authRoutes.post('/signup', (req, res, next) => {
     return;
   }
 
-//making sure the password is 8 charachters or longer
+//making sure the password is 8 charachters or longer 
   if (password.length < 8) {
     res.status(400).json({ message: 'Password has to be at least 8 charachters long' });
     return;
@@ -41,12 +43,21 @@ authRoutes.post('/signup', (req, res, next) => {
             password: hashPass,
             email
             });
+            
+            //Testing Features
+            theUser.features.push(['NTS', []]);
+            theUser.features.push(['PRJ', []]);
 
             theUser.save((err) => {
             if (err) {
                 res.status(400).json({ message: 'Something went wrong while saving the account etails' });
                 return;
             }
+            
+            // (JM) : Create Folder for pastebin
+            //var dir = __dirname + '../../../pastebin/' + theUser.id;
+            //fs.mkdirSync(dir);
+            
 
             req.login(theUser, (err) => {
                 if (err) {
@@ -62,7 +73,9 @@ authRoutes.post('/signup', (req, res, next) => {
     }
 });
 
+// Login Route (A) (JM TEST: NOT WORKING)
 authRoutes.post('/login', (req, res, next) => {
+        
     passport.authenticate('local', (err, theUser, failureDetails) => {
       if (err) {
         res.status(500).json({ message: 'Something went wrong' });
@@ -103,7 +116,7 @@ authRoutes.get('/loggedin', (req, res, next) => {
 
 
 //handling editing user's profiles
-authRoutes.get('/:userId/edit', (req, res, next)=>{
+authRoutes.get('/:userId', (req, res, next)=>{
     User.findById(req.params.userId)
     .then((user)=>{
         res.status(200).json(user)

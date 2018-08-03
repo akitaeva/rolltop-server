@@ -5,7 +5,8 @@ const projectSchema = new Schema({
     title:        {type: String, required: true},
     tasks:        [{type: Schema.Types.ObjectId, ref: 'Task'}], 
     description:  {type: String},
-    closed:       {type: Boolean, default: false},
+    closed:       {type: Boolean, default: false}
+    //owner:        {type: Schema.Types.ObjectId, ref: 'User'}
     }, 
     {
         usePushEach: true
