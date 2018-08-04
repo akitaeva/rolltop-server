@@ -23,7 +23,7 @@ projectRoutes.post('/projects/postProject', (req, res, next) => {
         description: req.body.description
     })
     .then((response)=>{
-        User.findById("5b6486c6e729e02870365bbc")
+        User.findById(req.user.id)
         .then((user)=>{
             console.log("Pushing note into user");
             console.log("Features before: " ,user.features);
@@ -82,7 +82,7 @@ projectRoutes.post('/projects/:projectId/update',(req, res, next) => {
 // Delete Project from DB and User Features sctructure <PRJ> 
 projectRoutes.post('/projects/delete/:id', (req, res, next)=>{
 
-    User.findById("5b6486c6e729e02870365bbc")
+    User.findById(req.user.id)
     .then((user)=>{
         console.log("Delete");
         console.log("Features before: " , user.features);
@@ -147,7 +147,7 @@ projectRoutes.post('/tasks/:id/editTask', (req, res, next) => {
     const action  =        req.body.action;
     const dueTime  =       req.body.dueTime;
     const orderNumber =    req.body.orderNumber;
-    const completed =         req.body.complete;
+    const completed =      req.body.complete;
  
     Task.findById(pId)
         .then((task) =>{
@@ -170,7 +170,7 @@ projectRoutes.post('/tasks/:id/editTask', (req, res, next) => {
 
 projectRoutes.post('/project/deleteTask/:id', (req, res, next) => {
 
-    Project.findById("5b6488625c36b65ef85062ba")
+    Project.findById(req.user.id)
     .then((project)=> {
         console.log(req.params.id);
         console.log(project.tasks);

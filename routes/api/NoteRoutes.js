@@ -5,7 +5,7 @@ const User       = require('../../models/user');
 
 // Get All Notes (JM) (TODO: Edit FindByID with req.user.id)
 router.get('/notes/getNotes/', (req, res, next) => {
-    User.findById("5b646a1569b8dd46f4a8309c")
+    User.findById(req.user.id)
         .then((user)=>{
             const noteIdArray =  user.features[0][1];
             let resultJson = "";
@@ -31,7 +31,7 @@ router.post('/notes/postNote', (req, res, next) => {
         content: req.body.content
     })
     .then((response)=>{
-        User.findById("5b646a1569b8dd46f4a8309c")
+        User.findById(req.user.id)
         .then((user)=>{
             console.log("Pushing note into user");
             console.log("Features before: " ,user.features);
@@ -93,7 +93,7 @@ router.post('/notes/editNote/:id', (req, res, next) => {
 //Delete Notes (JM) (TODO: Add error protection | replace id with req.user.id)
 router.post('/notes/deleteNote/:id', (req, res, next) => {
 
-    User.findById("5b646a1569b8dd46f4a8309c")
+    User.findById(req.user.id)
     .then((user)=>{
         console.log("Delete");
         //console.log("Features before: " , user.features);
