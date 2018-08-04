@@ -1,7 +1,7 @@
 const express    = require('express');
 const passport   = require('passport');
 const bcrypt     = require('bcryptjs');
-const fs            = require('fs'); // (JM): Added Filesystem to add folder when signing up
+const fs         = require('fs'); // (JM): Added Filesystem to add folder when signing up
 
 const authRoutes = express.Router(); 
 const User       = require('../../models/user');// the user model
@@ -50,7 +50,7 @@ authRoutes.post('/signup', (req, res, next) => {
 
             theUser.save((err) => {
             if (err) {
-                res.status(400).json({ message: 'Something went wrong while saving the account etails' });
+                res.status(400).json({ message: 'Something went wrong while saving the account details' });
                 return;
             }
             
