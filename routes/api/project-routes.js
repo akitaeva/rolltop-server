@@ -1,68 +1,59 @@
 const express = require("express");
+var mongoose = require('mongoose');
 const projectRoutes = express.Router();
 const Project = require("../../models/project");
 const Task = require('../../models/task');
+const User       = require('../../models/user');
 
+// Gets all projects
 projectRoutes.get('/projects', (req, res, next) => {
-    Project.find({}, (err, tasks) => {
+    Project.find({}, (err, projects) => {
       if (err) { return res.json(err).status(500); }
   
       return res.json(projects);
     });
   });
 
-projectRoutes.post('/projects', (req, res, next) => {
-    const newProject = new Project({  
-      title:   req.body.title,
-    //   tasks:   req.body.tasks,
-      description: req.body.description,
-    });
 
-    newProject.save( (err) => {
-        if (err){
-            return res.status(500).json(err) 
-        }
-        if (newProject.errors) {
-            return res.status(400).json(newProject) 
-        }
-        return res.json(newProject);
-      });
-});
-
-
-projectRoutes.post('/projects/:id/add-task', (req, res, next) => {
-    const newTask = {
-        action: req.body.action,
-        dueTime: req.body.dueTime,
-        orderNumber: req.body.orderNumber 
-    }
-    
-    Task.create(newTask)
-    .then( newTask => {
-        Project.findById(req.params.id)
-        .then( foundProject => {
-            foundProject.tasks.push(newTask);
-            foundProject.save()
-            .then( project => res.status(200).json(project))
-            .catch(err=>next(err))
-        })
-        .catch(err=>next(err))
+// Make new Project (TODO: Replace id with)
+projectRoutes.post('/projects/postProject', (req, res, next) => {
+    Project.create({
+        title: req.body.title,
+        tasks: [],
+        description: req.body.description
     })
-    .catch( err => next(err))
-    
-})
+    .then((response)=>{
+        User.findById(req.user.id)
+        .then((user)=>{
+            console.log("Pushing note into user");
+            console.log("Features before: " ,user.features);
 
+            const blah = user.features;
+            blah[1][1].push(response.id);
+            user.features = [];
+            user.features = blah;
 
-// projectRoutes.get('/projects/:projectId/edit', (req, res, next) => {
-//     const id = req.params.taskId;
-//     Project.findById(req.params.id, (err, project) => {
-//       if (err)    {return res.json(err).status(500); }
-//       if (!entry) {return res.json(err).status(404); }
-  
-//       return res.json(project);
-//     });
-// });
- 
+            user.save()
+            .then((response)=>{
+                console.log("Resposne after " , response.features);
+            })
+            .catch(err => {
+                console.log("unable to save to database");
+            });
+
+        })
+        .catch((err)=>{
+            console.log("Error User");
+            next(err);
+        })
+
+        res.json(response);
+    })
+    .catch((err)=>{
+        console.log("Error Project", err);
+        res.json(err);
+    })
+});
 
 // Update Full Project by ID (JM) (DONE) (Notes: Might have to add explicit update functions for things like "closed")
 projectRoutes.post('/projects/:projectId/update',(req, res, next) => {
@@ -88,24 +79,119 @@ projectRoutes.post('/projects/:projectId/update',(req, res, next) => {
     })  
 });       
 
-projectRoutes.post('/projects/:projectId/delete', (req, res, next)=>{
-    const id = req.params.placeId;
-    Place.findByIdAndRemove(id)
-    .then(() =>{
-        res.status(200).json({ message: 'The project entry has been deleted' })
-    })
-    .catch(err => console.log("Error while deleting the project entry", err))
-}); 
+// Delete Project from DB and User Features sctructure <PRJ> 
+projectRoutes.post('/projects/delete/:id', (req, res, next)=>{
 
-projectRoutes.get('/projects/:projectId', (req, res, next) => {
-    const id = req.params.taskId;
-    Project.findById(req.params.id, (err, project) => {
-      if (err)    {return res.json(err).status(500); }
-      if (!entry) {return res.json(err).status(404); }
-  
-      return res.json(project);
-    });
+    User.findById(req.user.id)
+    .then((user)=>{
+        console.log("Delete");
+        console.log("Features before: " , user.features);
+
+        const blah = user.features;
+        blah[1][1] = blah[1][1].filter(e => e !== req.params.id); 
+        user.features = [];
+        user.features = blah;
+
+        user.save()
+        .then((response)=>{
+            console.log("Resposne after " , response.features);
+
+            Project.findByIdAndRemove(req.params.id)
+            .then((response) =>{
+                res.json(response);
+            })
+            .catch((err)=>{
+                res.json(err);
+            });
+
+        })
+        .catch(err => {
+            console.log("unable to save to database");
+        });
+
+    })
+    .catch((err)=>{
+        console.log("Error User");
+        next(err);
+    })
 });
+
+
+// ------ Task Routes -------
+
+projectRoutes.post('/projects/:id/add-task', (req, res, next) => {
+    const newTask = {
+        action: req.body.action,
+        dueTime: req.body.dueTime,
+        orderNumber: req.body.orderNumber 
+    }
+    
+    Task.create(newTask)
+    .then( newTask => {
+        Project.findById(req.params.id)
+        .then( foundProject => {
+            foundProject.tasks.push(newTask);
+            foundProject.save()
+            .then( project => res.status(200).json(project))
+            .catch(err=>next(err))
+        })
+        .catch(err=>next(err))
+    })
+    .catch( err => next(err))
+    
+}) 
+
+// Edit task by id
+projectRoutes.post('/tasks/:id/editTask', (req, res, next) => {
+    const pId =            req.params.id;
+    const action  =        req.body.action;
+    const dueTime  =       req.body.dueTime;
+    const orderNumber =    req.body.orderNumber;
+    const completed =      req.body.complete;
+ 
+    Task.findById(pId)
+        .then((task) =>{
+            console.log(task);
+            task.action  =        action;
+            task.dueTime  =       dueTime;
+            task.orderNumber =    orderNumber;
+            task.completed =         completed;
+//meow, jessica was here!
+            task.save()
+                .then((response)=>{
+                    res.json(response);
+                })
+        })
+    .catch((err)=>{
+        res.json(err);
+    })  
+    
+}) 
+
+projectRoutes.post('/project/deleteTask/:id', (req, res, next) => {
+
+    Project.findById(req.user.id)
+    .then((project)=> {
+        console.log(req.params.id);
+        console.log(project.tasks);
+        project.tasks = project.tasks.filter(e => e !== mongoose.Types.ObjectId(req.params.id));
+        console.log(project.tasks);
+        /*Task.findByIdAndRemove(req.params.id)
+        .then((response) =>{
+            res.json(response);
+            })
+        .catch((err)=>{
+            console.log(err);
+            res.json(err);
+        });*/
+    })
+    .catch((err)=>{
+        console.log(err);
+        next(err);
+    });
+
+
+}) 
    
 
 module.exports = projectRoutes;

@@ -45,7 +45,7 @@ authRoutes.post('/signup', (req, res, next) => {
             });
             
             //Testing Features
-            theUser.features.push(['NTS', []]);
+            theUser.features.push(['NTS', []]); //Add Note Features
             theUser.features.push(['PRJ', []]);
 
             theUser.save((err) => {

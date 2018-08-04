@@ -10,8 +10,8 @@ placeRoutes.get('/places', (req, res, next) => {
     });
   });
 
-placeRoutes.post('/places', (req, res, next) => {
-    const newPlace = new Place({  
+placeRoutes.post('/places/addPlace', (req, res, next) => {
+    /*const newPlace = new Place({  
       name:   req.body.name,
       category: req.body.category,
       phoneNumber: req.body.phoneNumber,
@@ -27,7 +27,46 @@ placeRoutes.post('/places', (req, res, next) => {
             return res.status(400).json(newPlace) 
         }
         return res.json(newPlace);
-      });
+    });*/
+
+    Place.create({
+      name:   req.body.name,
+      category: req.body.category,
+      phoneNumber: req.body.phoneNumber,
+      address: req.body.address, 
+      notes: req.body.notes
+    })
+    .then((response)=>{
+        User.findById("5b646a1569b8dd46f4a8309c")
+        .then((user)=>{
+            console.log("Pushing note into user");
+            console.log("Features before: " ,user.features);
+
+            const blah = user.features;
+            blah[2][1].push(response.id);
+            user.features = [];
+            user.features = blah;
+
+            user.save()
+            .then((response)=>{
+                console.log("Resposne after " , response.features);
+            })
+            .catch(err => {
+                console.log("unable to save to database");
+            });
+
+        })
+        .catch((err)=>{
+            console.log("Error User");
+            next(err);
+        })
+
+        res.json(response);
+    })
+    .catch((err)=>{
+        console.log("Error Note");
+        res.json(err);
+    })
 });
 
 // Edit not needed, can use /places/:placeId
