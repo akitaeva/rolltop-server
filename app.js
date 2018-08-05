@@ -36,7 +36,7 @@ const debug = require('debug')(`${app_name}:${path.basename(__filename).split('.
 const app = express();
 
 // Middleware Setup
-app.use(cors());
+ 
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -56,8 +56,9 @@ app.use(session({
   secret: 'team motherland auth passport secret shh',
   resave: true,
   saveUninitialized: true,
-  cookie : { httpOnly: true, maxAge: 2419200000 }
+  // cookie : { httpOnly: true, maxAge: 2419200000 }
 }));
+
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
@@ -69,6 +70,14 @@ app.use(passport.session());
 
 // default value for title local
 app.locals.title = 'Rolltop - Your All Access Online Desk';
+
+app.use(
+  cors({
+    credentials: true,                 // allow other domains to send cookies
+    origin: ["http://localhost:4200"]  // these are the domains that are allowed
+  })
+);
+
 
 // Index Route
 const index = require('./routes/index');
