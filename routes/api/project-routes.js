@@ -7,16 +7,27 @@ const User       = require('../../models/user');
 
 // Gets all projects
 projectRoutes.get('/projects', (req, res, next) => {
-    Project.find({}, (err, projects) => {
-      if (err) { return res.json(err).status(500); }
-  
-      return res.json(projects);
+    User.findById(req.user.id)
+        .then((user)=>{
+            const noteIdArray =  user.features[1][1];
+            let resultJson = "";
+            console.log(noteIdArray);
+            Project.find({
+                '_id': { $in: noteIdArray}
+            }, function(err, docs){
+                 console.log("Done");
+                 return res.json(docs);
+            });
+        })
+        .catch((err)=>{
+            console.log("Error User");
+            next(err);
     });
   });
 
 
 // Make new Project (TODO: Replace id with)
-projectRoutes.post('/projects/postProject', (req, res, next) => {
+projectRoutes.post('/projects', (req, res, next) => {
     Project.create({
         title: req.body.title,
         tasks: [],
@@ -80,7 +91,7 @@ projectRoutes.post('/projects/:projectId/update',(req, res, next) => {
 });       
 
 // Delete Project from DB and User Features sctructure <PRJ> 
-projectRoutes.post('/projects/delete/:id', (req, res, next)=>{
+projectRoutes.post('/projects/:id/delete', (req, res, next)=>{
 
     User.findById(req.user.id)
     .then((user)=>{
@@ -142,7 +153,7 @@ projectRoutes.post('/projects/:id/add-task', (req, res, next) => {
 }) 
 
 // Edit task by id
-projectRoutes.post('/tasks/:id/editTask', (req, res, next) => {
+projectRoutes.post('/tasks/:id/edit-task', (req, res, next) => {
     const pId =            req.params.id;
     const action  =        req.body.action;
     const dueTime  =       req.body.dueTime;
@@ -155,7 +166,7 @@ projectRoutes.post('/tasks/:id/editTask', (req, res, next) => {
             task.action  =        action;
             task.dueTime  =       dueTime;
             task.orderNumber =    orderNumber;
-            task.completed =         completed;
+            task.completed =      completed;
 //meow, jessica was here!
             task.save()
                 .then((response)=>{
@@ -168,7 +179,8 @@ projectRoutes.post('/tasks/:id/editTask', (req, res, next) => {
     
 }) 
 
-projectRoutes.post('/project/deleteTask/:id', (req, res, next) => {
+//(TODO: Project.filter for some reason is not working )
+projectRoutes.post('/project/:id/delete-task', (req, res, next) => {
 
     Project.findById(req.user.id)
     .then((project)=> {
