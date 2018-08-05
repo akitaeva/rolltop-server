@@ -23,7 +23,7 @@ passportSetup(passport);
 
 mongoose.Promise = Promise;
 mongoose
-  .connect('mongodb://localhost/testspace', {useMongoClient: true})
+  .connect('mongodb://localhost/rolltop', {useMongoClient: true})
   .then(() => {
     console.log('Connected to Mongo!')
   }).catch(err => {
