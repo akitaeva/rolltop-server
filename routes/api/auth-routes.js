@@ -107,6 +107,7 @@ authRoutes.post('/logout', (req, res, next) => {
 
 
 authRoutes.get('/loggedin', (req, res, next) => {
+  console.log('hey: ', req.user)
     if (req.isAuthenticated()) {
       res.status(200).json(req.user);
       return;
