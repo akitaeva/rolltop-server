@@ -12,13 +12,13 @@ router.get('/',function(req,res){
 });
 
 // Uploads File POST (JM) (TODO: Upload to user folder, allow upload if folder is less than 75MB) 
-router.post('/upload/:id',function(req,res){
+router.post('/upload',function(req,res){
     console.log(req.files);
     if(req.files.upfile){
       var file = req.files.upfile,
         name = file.name, //file.name,
         type = file.mimetype;
-      var uploadpath = __dirname + '../../../pastebin/' + req.params.id + "/" + name;
+      var uploadpath = __dirname + '../../../pastebin/' + req.user.id + "/" + name;
       file.mv(uploadpath,function(err){
         if(err){
           console.log("File Upload Failed",name,err);
@@ -37,9 +37,9 @@ router.post('/upload/:id',function(req,res){
 });
 
 //Downlod route for any file (JM) (TODO: Download specific File) | Uses Query params "?name = UPE.jpg"
-router.get('/download/:id', function(req, res){
+router.get('/download/', function(req, res){
     var fileName = req.query.name; 
-    var file = __dirname + '../../../pastebin/' + fileName;
+    var file = __dirname + '../../../pastebin/' + req.user.id + "/" + fileName;
     res.download(file); // Set disposition and send it.
 });
 
