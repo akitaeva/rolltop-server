@@ -3,8 +3,8 @@ const router        = express.Router();
 const Note        = require('../../models/Note');
 const User       = require('../../models/user');
 
-// Get All Notes (JM)
-router.get('/notes/getNotes/', (req, res, next) => {
+// Get All Notes (JM) (WORKS)
+router.get('/notes', (req, res, next) => {
     User.findById(req.user.id)
         .then((user)=>{
             const noteIdArray =  user.features[0][1];
@@ -23,8 +23,8 @@ router.get('/notes/getNotes/', (req, res, next) => {
     });
 });
 
-// Post New Note (JM) 
-router.post('/notes/postNote', (req, res, next) => {
+// Post New Note (JM) (WORKS
+router.post('/notes', (req, res, next) => {
     
     Note.create({
         title: req.body.title,
@@ -63,8 +63,8 @@ router.post('/notes/postNote', (req, res, next) => {
     })
 });
 
-// Get Specific Notes (JM) (DONE)
-router.get('/notes/getNote/:id', (req, res, next) => {
+// Get Specific Notes (JM) (WORKS)
+router.get('/notes/:id', (req, res, next) => {
     Note.findById(req.params.id, (err, notes) => {
     if (err) { return res.json(err).status(500); }
 
@@ -72,8 +72,8 @@ router.get('/notes/getNote/:id', (req, res, next) => {
   });
 });
 
-//Edit Notes (JM) (DONE)
-router.post('/notes/editNote/:id', (req, res, next) => {
+//Edit Notes (JM) (WORKS)
+router.post('/notes/:id/edit', (req, res, next) => {
 
   const content = req.body.content;
   
@@ -90,13 +90,12 @@ router.post('/notes/editNote/:id', (req, res, next) => {
   })
 });
 
-//Delete Notes (JM) (TODO: Add error protection | replace id with req.user.id)
-router.post('/notes/deleteNote/:id', (req, res, next) => {
+//Delete Notes (JM) (TODO: Add error protection)
+router.post('/notes/:id/delete', (req, res, next) => {
 
     User.findById(req.user.id)
     .then((user)=>{
         console.log("Delete");
-        //console.log("Features before: " , user.features);
 
         const blah = user.features;
         console.log(blah);
@@ -130,4 +129,3 @@ router.post('/notes/deleteNote/:id', (req, res, next) => {
 });
 
 module.exports = router;
-/* Fake comments hahha*/
