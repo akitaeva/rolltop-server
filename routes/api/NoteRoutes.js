@@ -3,7 +3,7 @@ const router        = express.Router();
 const Note        = require('../../models/Note');
 const User       = require('../../models/user');
 
-// Get All Notes (JM) (TODO: Edit FindByID with req.user.id)
+// Get All Notes (JM)
 router.get('/notes/getNotes/', (req, res, next) => {
     User.findById(req.user.id)
         .then((user)=>{
@@ -23,7 +23,7 @@ router.get('/notes/getNotes/', (req, res, next) => {
     });
 });
 
-// Post New Note (JM) (TODO: Edit FindById with req.user.id)
+// Post New Note (JM) 
 router.post('/notes/postNote', (req, res, next) => {
     
     Note.create({
