@@ -8,9 +8,10 @@ const User       = require('../../models/user');// the user model
 
 // Login Route (A) (JM TEST: WORKS)
 authRoutes.post('/signup', (req, res, next) => {
-  const username = req.body.username;
-  const password = req.body.password;
-  const email    = req.body.email;
+  console.log('body is:', req.body)
+  const username = req.body.signUpUsername;
+  const password = req.body.signUpPassword;
+  const email    = req.body.signUpEmail;
 
 //making sure the required fields have values 
   if (!username || !password || !email) {
@@ -24,7 +25,7 @@ authRoutes.post('/signup', (req, res, next) => {
     return;
   }
 
-  if( password !== req.body.checkedPassword){
+  if( password !== req.body.signUpCheckedPassword){
     res.status(400).json({ message: 'Passwords do not match!' });
     return;
   } else {  
