@@ -14,7 +14,7 @@ placeRoutes.get('/places', (req, res, next) => {
     .then((user)=>{
         const noteIdArray =  user.features[2][1];
         let resultJson = "";
-        console.log(noteIdArray);
+        //console.log(noteIdArray);
         Place.find({
             '_id': { $in: noteIdArray}
         }, function(err, docs){

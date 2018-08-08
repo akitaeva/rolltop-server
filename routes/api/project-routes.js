@@ -8,7 +8,7 @@ const User       = require('../../models/user');
 // Gets all projects
 projectRoutes.get('/projects', (req, res, next) => {
 
-	console.log("Projet goes here: " + req.user);
+	//console.log("Projet goes here: " + req.user);
     if(req.user === undefined){
         return res.json("Not logged in");
     }
@@ -34,7 +34,7 @@ projectRoutes.get('/projects', (req, res, next) => {
 //Get Individual Project by Id
 projectRoutes.get('/projects/:id', (req, res, next) => {
 
-	console.log("Projet goes here: " + req.user);
+	//console.log("Projet goes here: " + req.user);
     if(req.user === undefined){
         return res.json("Not logged in");
     }
@@ -239,26 +239,27 @@ projectRoutes.post('/tasks/:id/edit-task', (req, res, next) => {
 }) 
 
 //(TODO: Project.filter for some reason is not working )
-projectRoutes.post('/project/:id/delete-task', (req, res, next) => {
+projectRoutes.post('/project/:id/delete-task/:taskId', (req, res, next) => {
 
     if(req.user === undefined){
         return res.json("Not logged in");
     }
 
-    Project.findById(req.user.id)
+    Project.findById(req.params.id)
     .then((project)=> {
-        console.log(req.params.id);
+        console.log("Taskid: " , req.params.taskId);
         console.log(project.tasks);
-        project.tasks = project.tasks.filter(e => e !== mongoose.Types.ObjectId(req.params.id));
+        project.tasks = project.tasks.filter(e => e != req.params.taskId);
         console.log(project.tasks);
-        /*Task.findByIdAndRemove(req.params.id)
+        Task.findByIdAndRemove(req.params.taskId)
         .then((response) =>{
+			console.log(response);
             res.json(response);
             })
         .catch((err)=>{
             console.log(err);
             res.json(err);
-        });*/
+        });
     })
     .catch((err)=>{
         console.log(err);
@@ -281,11 +282,11 @@ projectRoutes.get('/tasks/:id', (req, res, next) => {
 			//console.log(user.features);
             const taskIdArray =  project.tasks;
             //let resultJson = "";
-            console.log(taskIdArray);
+            //console.log(taskIdArray);
             Task.find({
                 '_id': { $in: taskIdArray}
             }, function(err, docs){
-                 console.log("Done");
+                 //console.log("Done");
                  return res.json(docs);
             });
         })
