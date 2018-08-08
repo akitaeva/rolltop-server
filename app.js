@@ -9,6 +9,7 @@ const mongoose     = require('mongoose');
 const logger       = require('morgan');
 const path         = require('path');
 const cors 		   = require('cors');
+require("dotenv").config();
 
 //File Upload 
 var upload = require('express-fileupload');
@@ -108,5 +109,8 @@ app.all('/*', function (req, res) {
   res.sendfile(__dirname + '/public/index.html');
 });
 
+app.use((req, res, next) => {
+  res.sendfile(__dirname + '/public/index.html');
+});
 
 module.exports = app;
