@@ -85,7 +85,7 @@ const index = require('./routes/index');
 app.use('/', index);
 
 //Note Routes (JM) (Tested: NO)
-const nRoutes = require('./routes/api/noteRoutes');
+const nRoutes = require('./routes/api/NoteRoutes');
 app.use('/api', nRoutes);
 
 //Pastebin Routes (JM) (Tested: NO)
