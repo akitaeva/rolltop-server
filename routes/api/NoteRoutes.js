@@ -1,6 +1,6 @@
 const express       = require('express');
 const router        = express.Router();
-const Note        = require('../../models/Note');
+const Note        = require('../../models/note');
 const User       = require('../../models/user');
 
 // Get All Notes (JM) (WORKS)
