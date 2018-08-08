@@ -5,10 +5,16 @@ const User       = require('../../models/user');
 
 // Get All Notes (JM) (WORKS)
 router.get('/notes', (req, res, next) => {
+
+	console.log(req.user);
+    if(req.user === undefined){
+        return res.json("Not logged in");
+    }
+
     User.findById(req.user.id)
         .then((user)=>{
             const noteIdArray =  user.features[0][1];
-            let resultJson = "";
+            //let resultJson = "";
             console.log(noteIdArray);
             Note.find({
                 '_id': { $in: noteIdArray}
@@ -25,7 +31,11 @@ router.get('/notes', (req, res, next) => {
 
 // Post New Note (JM) (WORKS
 router.post('/notes', (req, res, next) => {
-    
+
+    if(req.user === undefined){
+        return res.json("Not logged in");
+    }
+
     Note.create({
         title: req.body.title,
         content: req.body.content
@@ -55,6 +65,12 @@ router.post('/notes', (req, res, next) => {
             next(err);
         })
 
+
+        //David
+        let myObj = {
+            myNum: 10,
+        };
+
         res.json(response);
     })
     .catch((err)=>{
@@ -65,6 +81,11 @@ router.post('/notes', (req, res, next) => {
 
 // Get Specific Notes (JM) (WORKS)
 router.get('/notes/:id', (req, res, next) => {
+
+    if(req.user === undefined){
+        return res.json("Not logged in");
+    }
+
     Note.findById(req.params.id, (err, notes) => {
     if (err) { return res.json(err).status(500); }
 
@@ -74,6 +95,10 @@ router.get('/notes/:id', (req, res, next) => {
 
 //Edit Notes (JM) (WORKS)
 router.post('/notes/:id/edit', (req, res, next) => {
+  
+    if(req.user === undefined){
+        return res.json("Not logged in");
+    }
 
   const content = req.body.content;
   
@@ -92,6 +117,10 @@ router.post('/notes/:id/edit', (req, res, next) => {
 
 //Delete Notes (JM) (TODO: Add error protection)
 router.post('/notes/:id/delete', (req, res, next) => {
+
+    if(req.user === undefined){
+        return res.json("Not logged in");
+    }
 
     User.findById(req.user.id)
     .then((user)=>{
