@@ -9,7 +9,7 @@ const mongoose     = require('mongoose');
 const logger       = require('morgan');
 const path         = require('path');
 const cors 		   = require('cors');
-require("dotenv").config();
+
 
 //File Upload 
 var upload = require('express-fileupload');
