@@ -79,7 +79,7 @@ router.post('/notes', (req, res, next) => {
     })
 });
 
-// Get Specific Notes (JM) (WORKS)
+// Get Specific Notes (JM) 
 router.get('/notes/:id', (req, res, next) => {
 
     if(req.user === undefined){
@@ -93,18 +93,28 @@ router.get('/notes/:id', (req, res, next) => {
   });
 });
 
+/*
 //Edit Notes (JM) (WORKS)
 router.post('/notes/:id/edit', (req, res, next) => {
   
     if(req.user === undefined){
         return res.json("Not logged in");
     }
+*/
 
+//Edit Notes (JM) 
+router.post('/notes/:id/update', (req, res, next) => {
+
+
+
+  const title = req.body.title;
   const content = req.body.content;
+  
   
   Note.findById(req.params.id)
       .then((note)=>{
           note.content = content;
+          note.title = title;
           note.save()
               .then((response)=>{
                   res.json(response);
