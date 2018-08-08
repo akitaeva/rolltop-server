@@ -10,6 +10,7 @@ const logger       = require('morgan');
 const path         = require('path');
 const cors 		   = require('cors');
 
+
 //File Upload 
 var upload = require('express-fileupload');
 
@@ -23,7 +24,7 @@ passportSetup(passport);
 
 mongoose.Promise = Promise;
 mongoose
-  .connect('mongodb://localhost/rolltop', {useMongoClient: true})
+  .connect(process.env.MONGODB_URI, {useMongoClient: true})
   .then(() => {
     console.log('Connected to Mongo!')
   }).catch(err => {
@@ -84,7 +85,7 @@ const index = require('./routes/index');
 app.use('/', index);
 
 //Note Routes (JM) (Tested: NO)
-const nRoutes = require('./routes/api/noteRoutes');
+const nRoutes = require('./routes/api/NoteRoutes');
 app.use('/api', nRoutes);
 
 //Pastebin Routes (JM) (Tested: NO)
@@ -108,5 +109,8 @@ app.all('/*', function (req, res) {
   res.sendfile(__dirname + '/public/index.html');
 });
 
+app.use((req, res, next) => {
+  res.sendfile(__dirname + '/public/index.html');
+});
 
 module.exports = app;
