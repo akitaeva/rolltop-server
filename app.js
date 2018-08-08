@@ -89,7 +89,7 @@ app.use('/api', nRoutes);
 
 //Pastebin Routes (JM) (Tested: NO)
 const uRoutes = require('./routes/api/PasteRoutes');
-app.use('/paste', uRoutes);
+app.use('/api', uRoutes);
 
 //Place Routes (A)  (Tested: NO)
 const placeRoutes = require('./routes/api/place-routes');

@@ -7,6 +7,12 @@ const User       = require('../../models/user');
 
 // Gets all projects
 projectRoutes.get('/projects', (req, res, next) => {
+
+	console.log("Projet goes here: " + req.user);
+    if(req.user === undefined){
+        return res.json("Not logged in");
+    }
+
     User.findById(req.user.id)
         .then((user)=>{
             const noteIdArray =  user.features[1][1];
@@ -25,9 +31,38 @@ projectRoutes.get('/projects', (req, res, next) => {
     });
   });
 
+//Get Individual Project by Id
+projectRoutes.get('/projects/:id', (req, res, next) => {
+
+	console.log("Projet goes here: " + req.user);
+    if(req.user === undefined){
+        return res.json("Not logged in");
+    }
+	
+	/*Project.findById(req.params.id, (err, notes) => {
+		if (err) { return res.json(err).status(500); }
+		return res.json(notes);
+	})*/
+	
+	Project.findById(req.params.id)
+        .then((project)=>{
+			return res.json(project);
+        })
+        .catch((err)=>{
+            console.log("Error User");
+            next(err);
+    });
+
+ });
 
 // Make new Project (TODO: Replace id with)
 projectRoutes.post('/projects', (req, res, next) => {
+
+	console.log(req.user);
+    if(req.user === undefined){
+        return res.json("Not logged in");
+    }
+
     Project.create({
         title: req.body.title,
         tasks: [],
@@ -69,10 +104,14 @@ projectRoutes.post('/projects', (req, res, next) => {
 // Update Full Project by ID (JM) (DONE) (Notes: Might have to add explicit update functions for things like "closed")
 projectRoutes.post('/projects/:projectId/update',(req, res, next) => {
     
+    if(req.user === undefined){
+        return res.json("Not logged in");
+    }
+
     const pId =          req.params.projectId;
     const title  =       req.body.title;
     const description =  req.body.description;
-    const closed =       req.body.title;
+    const closed =       req.body.closed;
  
     Project.findById(pId)
         .then((project) =>{
@@ -81,9 +120,12 @@ projectRoutes.post('/projects/:projectId/update',(req, res, next) => {
             project.closed = closed;
 
             project.save()
-                .then((response)=>{
-                    res.json(response);
-                })
+            .then((response)=>{
+                res.json(response);
+            })
+			.catch((err)=>{
+				res.json(err);
+			})  
         })
     .catch((err)=>{
         res.json(err);
@@ -92,6 +134,10 @@ projectRoutes.post('/projects/:projectId/update',(req, res, next) => {
 
 // Delete Project from DB and User Features sctructure <PRJ> 
 projectRoutes.post('/projects/:id/delete', (req, res, next)=>{
+
+    if(req.user === undefined){
+        return res.json("Not logged in");
+    }
 
     User.findById(req.user.id)
     .then((user)=>{
@@ -131,6 +177,13 @@ projectRoutes.post('/projects/:id/delete', (req, res, next)=>{
 // ------ Task Routes -------
 
 projectRoutes.post('/projects/:id/add-task', (req, res, next) => {
+    
+    if(req.user === undefined){
+        return res.json("Not logged in");
+    }
+    
+	console.log("----- add task project id ---" + req.params.id);
+	
     const newTask = {
         action: req.body.action,
         dueTime: req.body.dueTime,
@@ -141,6 +194,7 @@ projectRoutes.post('/projects/:id/add-task', (req, res, next) => {
     .then( newTask => {
         Project.findById(req.params.id)
         .then( foundProject => {
+			console.log(foundProject);
             foundProject.tasks.push(newTask);
             foundProject.save()
             .then( project => res.status(200).json(project))
@@ -154,6 +208,11 @@ projectRoutes.post('/projects/:id/add-task', (req, res, next) => {
 
 // Edit task by id
 projectRoutes.post('/tasks/:id/edit-task', (req, res, next) => {
+
+    if(req.user === undefined){
+        return res.json("Not logged in");
+    }
+
     const pId =            req.params.id;
     const action  =        req.body.action;
     const dueTime  =       req.body.dueTime;
@@ -182,6 +241,10 @@ projectRoutes.post('/tasks/:id/edit-task', (req, res, next) => {
 //(TODO: Project.filter for some reason is not working )
 projectRoutes.post('/project/:id/delete-task', (req, res, next) => {
 
+    if(req.user === undefined){
+        return res.json("Not logged in");
+    }
+
     Project.findById(req.user.id)
     .then((project)=> {
         console.log(req.params.id);
@@ -205,5 +268,31 @@ projectRoutes.post('/project/:id/delete-task', (req, res, next) => {
 
 }) 
    
+   
+projectRoutes.get('/tasks/:id', (req, res, next) => {
+
+	//console.log(req.user);
+    if(req.user === undefined){
+        return res.json("Not logged in");
+    }
+
+    Project.findById(req.params.id)
+        .then((project)=>{
+			//console.log(user.features);
+            const taskIdArray =  project.tasks;
+            //let resultJson = "";
+            console.log(taskIdArray);
+            Task.find({
+                '_id': { $in: taskIdArray}
+            }, function(err, docs){
+                 console.log("Done");
+                 return res.json(docs);
+            });
+        })
+        .catch((err)=>{
+            console.log("Error User");
+            next(err);
+    });
+});
 
 module.exports = projectRoutes;

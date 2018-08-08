@@ -5,6 +5,11 @@ const User       = require('../../models/user');
 
 // Gets places (Works)
 placeRoutes.get('/places', (req, res, next) => {
+
+    if(req.user === undefined){
+        return res.json("Not logged in");
+    }
+
     User.findById(req.user.id)
     .then((user)=>{
         const noteIdArray =  user.features[2][1];
@@ -26,6 +31,11 @@ placeRoutes.get('/places', (req, res, next) => {
 
 // Add Place to User (WORKS)  
 placeRoutes.post('/places', (req, res, next) => {
+
+    if(req.user === undefined){
+        return res.json("Not logged in");
+    }
+
     Place.create({
       name:   req.body.name,
       category: req.body.category,
@@ -79,6 +89,10 @@ placeRoutes.post('/places', (req, res, next) => {
    
 //saving the updated task (WORKS)
 placeRoutes.post('/places/:placeId/update',(req, res, next) => {
+
+    if(req.user === undefined){
+        return res.json("Not logged in");
+    }
        const updPlace = {
            name:        req.body.name,
            category:    req.body.category,
@@ -101,6 +115,10 @@ placeRoutes.post('/places/:placeId/delete', (req, res, next)=>{
         res.status(200).json({ message: 'The place entry has been deleted' })
     })
     .catch(err => console.log("Error while deleting the place entry", err))*/
+
+    if(req.user === undefined){
+        return res.json("Not logged in");
+    }
 
     User.findById(req.user.id)
     .then((user)=>{
@@ -140,6 +158,11 @@ placeRoutes.post('/places/:placeId/delete', (req, res, next)=>{
 
 //Get Place (WORKS)
 placeRoutes.get('/places/:id', (req, res, next) => {
+
+    if(req.user === undefined){
+        return res.json("Not logged in");
+    }
+
     Place.findById(req.params.id, (err, place) => {
         if (err) { return res.json(err).status(500); }
     
