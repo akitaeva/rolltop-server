@@ -2,6 +2,18 @@ const express = require("express");
 const placeRoutes = express.Router();
 const Place = require("../../models/favPlace");
 const User       = require('../../models/user');
+const NodeGeocoder = require('node-geocoder');
+
+const options = {
+  provider: 'google',
+ 
+  // Optional depending on the providers
+  httpAdapter: 'https', // Default
+  apiKey: 'AIzaSyDg8RJxITThryFICnALvvijIyvMl8TYgjg', // for Mapquest, OpenCage, Google Premier
+  formatter: null         // 'gpx', 'string', ...
+};
+ 
+const geocoder = NodeGeocoder(options);
 
 // Gets places (Works)
 placeRoutes.get('/places', (req, res, next) => {
@@ -35,12 +47,12 @@ placeRoutes.post('/places', (req, res, next) => {
     if(req.user === undefined){
         return res.json("Not logged in");
     }
-
+  
     Place.create({
       name:   req.body.name,
       category: req.body.category,
       phoneNumber: req.body.phoneNumber,
-      address: req.body.address, 
+    //   address: req.body.address, 
       notes: req.body.notes
     })
     .then((response)=>{
