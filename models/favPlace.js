@@ -5,8 +5,11 @@ const placeSchema = new Schema({
   name:        {type: String, required: true},
   category:    {type: String, required: true},
   phoneNumber: {type: String},
-  address:     {type: String},
-  notes:       {type: String}
+  // address:     {type: String},
+  notes:       {type: String},
+  latitude:    {type: Number},
+  longitude:   {type: Number},
+  location:    {type: String}
   //owner:       {type: Schema.Types.ObjectId, ref: 'User'}
 }, {
   timestamps: true
